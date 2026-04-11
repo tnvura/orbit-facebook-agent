@@ -9,20 +9,21 @@
 
 ## Phase 0 Progress
 
-- [x] Task 0.1 — Initialize Orbit Vault structure (files created, pending Obsidian GUI open)
-- [ ] Task 0.2 — Install Obsidian CLI + obsidian-skills
-- [x] Task 0.3 — Git init + project docs (in progress)
-- [ ] Task 0.4 — Create plugin scaffold
-- [ ] Task 0.5 — Update root CLAUDE.md
+- [x] Task 0.1 — Initialize Orbit Vault structure
+- [x] Task 0.2 — Install Obsidian CLI + obsidian-skills
+- [x] Task 0.3 — Git init + project docs
+- [x] Task 0.4 — Create plugin scaffold + GitHub repo
+- [x] Task 0.5 — Update root CLAUDE.md
 
-## Phase 0 Checkpoint (not yet verified)
-- [ ] Orbit Vault opens in Obsidian
-- [ ] Vault search works
-- [ ] Plugin scaffold registered
-- [ ] Git repo initialized and pushed
-- [ ] Root CLAUDE.md updated
-- [ ] Playwright session still works
-- [ ] ANTHROPIC_API_KEY available
+## Phase 0 Checkpoint
+- [x] Orbit Vault opens in Obsidian (.obsidian/ generated)
+- [x] Vault CLI works: search, read, create all verified
+- [x] Plugin scaffold registered (orbit-facebook-agent on GitHub)
+- [x] obsidian-skills registered in Claude Code settings
+- [x] Git repo initialized and pushed (github.com/tnvura/orbit-facebook-agent)
+- [x] Root CLAUDE.md updated with 2 new subprojects
+- [x] Playwright session still works (Orbit Advisory profile active)
+- [x] No external API — classification runs inline within Claude Max subscription
 
 ---
 
