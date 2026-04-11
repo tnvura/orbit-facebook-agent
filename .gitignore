@@ -1,0 +1,23 @@
+# Playwright persistent login session — contains sensitive cookies
+.browser-profile/
+
+# Playwright temp snapshots and logs
+.playwright-cli/
+
+# OS files
+.DS_Store
+
+# Dedup tracking — local state, not versioned
+tracking/processed-post-ids.txt
+
+# Session logs
+logs/
+
+# Draft and posted replies — local state
+tracking/drafts/
+tracking/posted/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
