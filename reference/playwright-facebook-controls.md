@@ -1,44 +1,86 @@
-# Playwright CLI — Facebook Group Controls Reference
+# Facebook Group Browser Controls Reference
 
-Validated 2026-04-11 against Facebook group: อยากรู้เรื่องบัญชี เรื่องภาษี เชิญที่นี่คะ (598953943470618)
+Validated 2026-04-11/12 against Facebook group: อยากรู้เรื่องบัญชี เรื่องภาษี เชิญที่นี่คะ (598953943470618)
 
 Session: Logged in as Orbit Advisory page account (linked to personal account).
 
 ---
 
-## Prerequisites
+## Automation Approach: System Chrome + CDP
 
-- Playwright CLI: `/opt/homebrew/bin/playwright-cli`
-- **Always use `--headed` flag** when opening browser (user needs visibility)
-- **Always use `--profile` flag** to persist login session (see below)
+**IMPORTANT**: Do NOT use Playwright's bundled Chromium or automation flags. Facebook detects `--enable-automation` and serves a stripped DOM (no post IDs, no links). Use system Chrome via CDP instead.
+
+### How It Works
+
+1. Launch system Chrome with `--remote-debugging-port=9223` (no automation flags)
+2. Connect Python Playwright via `connect_over_cdp("http://localhost:9223")`
+3. Facebook sees a normal Chrome browser → full DOM with post IDs and links
+
+### Python Code Pattern
+
+```python
+from playwright.sync_api import sync_playwright
+import subprocess, time
+
+# Launch Chrome (no automation flags)
+chrome_proc = subprocess.Popen([
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "--remote-debugging-port=9223",
+    "--user-data-dir=/Users/tnvura/Desktop/Orbit Advisory/Orbit Facebook Agent/.browser-profile",
+    "--no-first-run",
+    "--no-default-browser-check",
+])
+time.sleep(4)
+
+with sync_playwright() as p:
+    browser = p.chromium.connect_over_cdp("http://localhost:9223")
+    context = browser.contexts[0]
+    page = context.pages[0] if context.pages else context.new_page()
+    # ... navigate, evaluate, etc.
+    # Do NOT call browser.close() — Chrome stays running, saves session
+```
+
+### Profile Switch Requirement
+
+Every fresh Chrome launch starts as the **personal account** (Thanavat). Facebook does not persist the page profile selection across sessions.
+
+**Required on each Chrome launch:**
+1. Chrome opens to facebook.com
+2. Click profile picture (top right)
+3. Switch to "Orbit Advisory"
+4. Press Enter in the terminal to continue
+
+The extraction script (`extract_posts.py`) handles this automatically — it detects the active profile and prompts if needed.
 
 ## Persistent Session (Orbit Advisory Profile)
 
-Login is stored in a persistent browser profile directory. After first-time login, the session persists across browser close/reopen — no re-login needed.
-
 **Profile path**: `/Users/tnvura/Desktop/Orbit Advisory/Orbit Facebook Agent/.browser-profile`
 
-**First-time setup** (done once):
-1. Open browser with `--profile` flag
-2. User logs in with personal Facebook account
-3. User switches to Orbit Advisory page profile via "Your profile" dropdown
-4. Both login and profile selection are saved to the profile directory
-
-**Important**: The persistent profile stores the Orbit Advisory page profile as active. All interactions (browsing, commenting) happen as "Orbit Advisory", not the personal account. The comment boxes will show "Comment as Orbit Advisory".
+- Session cookies persist: login stays active for weeks/months
+- Profile switch does NOT persist: must switch to Orbit Advisory each Chrome session
+- Chrome stays running between scans: no re-switch needed within the same session
 
 **Available profiles on this account**:
-- **Orbit Advisory** (active — the one we use)
-- Thanavat Urairerkkul (personal — do not use)
+- **Orbit Advisory** (use this one for all group activity)
+- Thanavat Urairerkkul (personal — default on fresh launch, switch away from this)
 - Araya Herbs (other page — do not use)
 
-## Opening & Closing
+## Opening the Browser (Manual)
 
 ```bash
-# STANDARD OPEN COMMAND — always use this exact form
-playwright-cli open "https://www.facebook.com/groups/598953943470618" --headed --profile "/Users/tnvura/Desktop/Orbit Advisory/Orbit Facebook Agent/.browser-profile"
+# Open Chrome with our profile on debug port
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --remote-debugging-port=9223 \
+  --user-data-dir="/Users/tnvura/Desktop/Orbit Advisory/Orbit Facebook Agent/.browser-profile" \
+  --no-first-run
+```
 
-# Close browser when done
-playwright-cli close
+## Stale Lock Files (after crash)
+
+If Chrome crashed, remove lock files before next launch:
+
+```bash
+rm -f ".browser-profile/SingletonLock" ".browser-profile/SingletonCookie" ".browser-profile/SingletonSocket"
 ```
 
 ## Navigation
