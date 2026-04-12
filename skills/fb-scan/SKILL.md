@@ -27,11 +27,11 @@ python3 scripts/extract_posts.py \
   ".browser-profile" \
   "reference/thai-keywords.json" \
   "tracking/processed-post-ids.txt" \
-  20 \
+  50 \
   loose
 ```
 
-Arguments: `num_scrolls` (default: 20), `filter_mode` (default: `loose`).
+Arguments: `num_scrolls` (default: 50), `filter_mode` (default: `loose`).
 
 | Scrolls | ~Posts scanned | ~Time window covered | Total wait |
 |---------|---------------|---------------------|-----------|

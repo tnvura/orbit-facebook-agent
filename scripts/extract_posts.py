@@ -265,58 +265,15 @@ def build_js_filter(keywords, filter_mode="strict"):
 
 
 def set_feed_to_recent(page):
-    """Try to sort the group feed by Recent Activity (New posts first)."""
+    """Click 'sort group feed by New posts' button to sort feed newest-first."""
     try:
-        # Step 1: discover what sort-related buttons exist near the feed
-        sort_candidates = page.evaluate("""() => {
-            const results = [];
-            const feed = document.querySelector('[role="feed"]');
-            // Search in the feed's parent container and siblings (sort controls sit above the feed)
-            const searchRoot = (feed && feed.parentElement) ? feed.parentElement.parentElement || document.body : document.body;
-            for (const el of searchRoot.querySelectorAll('[role="button"], button')) {
-                const label = (el.getAttribute('aria-label') || el.innerText || '').trim();
-                if (!label || label.length > 120) continue;
-                const lower = label.toLowerCase();
-                if (lower.includes('sort') || lower.includes('เรียง') ||
-                    lower.includes('top post') || lower.includes('recent') ||
-                    lower.includes('กิจกรรม') || lower.includes('โพสต์') ||
-                    lower.includes('new post') || lower.includes('ล่าสุด')) {
-                    results.push(label);
-                }
-            }
-            return results;
-        }""")
-
-        if sort_candidates:
-            print(f"  Sort candidates found: {sort_candidates}", file=sys.stderr)
+        btn = page.get_by_role("button", name="sort group feed by New posts").first
+        if btn.is_visible(timeout=4000):
+            btn.click()
+            print("  Feed sorted: New posts", file=sys.stderr)
+            time.sleep(2)
         else:
-            print("  Feed sort button not found — using default order", file=sys.stderr)
-            return
-
-        # Step 2: click the first matching button via Playwright native click
-        for label in sort_candidates[:3]:
-            try:
-                btn = page.get_by_role("button", name=label).first
-                if btn.is_visible(timeout=2000):
-                    btn.click()
-                    time.sleep(1)
-                    # Step 3: select the "recent/new" option from the dropdown
-                    for option in ["New Activity", "Recent Activity", "กิจกรรมล่าสุด", "ใหม่ล่าสุด", "New posts", "ล่าสุด"]:
-                        try:
-                            opt = page.get_by_role("menuitem", name=option).first
-                            if opt.is_visible(timeout=1500):
-                                opt.click()
-                                print(f"  Feed sorted: {option}", file=sys.stderr)
-                                time.sleep(2)
-                                return
-                        except Exception:
-                            continue
-                    print("  Sort menu opened but 'recent' option not found — using default order", file=sys.stderr)
-                    return
-            except Exception:
-                continue
-
-        print("  Could not click sort button — using default order", file=sys.stderr)
+            print("  Feed sort button not visible — feed may already be sorted or button label changed", file=sys.stderr)
     except Exception as e:
         print(f"  Feed sort skipped: {e}", file=sys.stderr)
 
@@ -350,7 +307,7 @@ def check_active_profile(page):
         return None
 
 
-def extract_posts(group_url, profile_path, keywords_path, processed_ids_path, num_scrolls=20, filter_mode="strict"):
+def extract_posts(group_url, profile_path, keywords_path, processed_ids_path, num_scrolls=50, filter_mode="loose"):
     keywords = load_keywords(keywords_path)
     processed_ids = load_processed_ids(processed_ids_path)
 
@@ -520,8 +477,8 @@ def main():
         sys.exit(1)
 
     group_url, profile_path, keywords_path, processed_ids_path = sys.argv[1:5]
-    num_scrolls = int(sys.argv[5]) if len(sys.argv) >= 6 else 20
-    filter_mode = sys.argv[6] if len(sys.argv) == 7 else "strict"
+    num_scrolls = int(sys.argv[5]) if len(sys.argv) >= 6 else 50
+    filter_mode = sys.argv[6] if len(sys.argv) == 7 else "loose"
 
     try:
         candidates = extract_posts(group_url, profile_path, keywords_path, processed_ids_path, num_scrolls, filter_mode)
