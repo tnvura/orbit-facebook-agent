@@ -47,7 +47,8 @@ Last updated: 2026-04-13
 - [x] 2.3 `skills/vault-capture/SKILL.md` — writes fb-posts and deep-research to sources/ (immutable)
 - [x] 2.4 `skills/vault-search/SKILL.md` — Grep-first vault search, returns strong/weak/none coverage signal
 - [x] 2.5 `skills/vault-compile/SKILL.md` — compiles sources into topics/, entities/, posts/; updates index.md and log.md
-- [x] 2.6 `skills/fb-research/SKILL.md` — full 8-step orchestration pipeline
+- [x] 2.6 `skills/fb-research/SKILL.md` — FB-specific workflow, delegates knowledge work to vault-research (v1.1.0)
+- [x] 2.7 `skills/vault-research/SKILL.md` — canonical research orchestrator (vault-search → deep-research → capture → compile); invocable directly by user or by fb-research
 - [x] `reference/pdf-parser.md` — opendataloader-pdf usage guide (dedup, parse, targeted read)
 - [x] Live tests: candidate #3 (ค่าเบี้ยเลี้ยง vs สวัสดิการ) — HIGH confidence; candidate #2 (บอจ.5 installment) — MEDIUM confidence
 - [x] Vault: 3 topics, 5 entities, 2 research sources, 2 post records compiled
@@ -93,7 +94,10 @@ Last updated: 2026-04-13
 ## Backlog (deferred, not blocking)
 
 - [ ] `skills/vault-lint/SKILL.md` — 7-check quality audit (orphan sources, broken wikilinks, missing citations, etc.)
-- [ ] `skills/vault-ingest/SKILL.md` — slash command for ingesting user-dropped raw clippings (`--pending` mode)
 - [ ] Cache TAS 1 Manual PDF (needed for cost-centre classification questions)
-- [ ] vault-compile: chunked strategy for large legal-text sources (มาตรา 38_64.md is 100+ pages)
 - [ ] Formal behavioral tests for vault-capture, vault-search, vault-compile edge cases
+
+### Dropped
+
+- ~~`skills/vault-ingest/SKILL.md` for batch-ingesting sources/raw/ clippings~~ — replaced by `/vault-research` direct queries. sources/raw/ serves as a reference library that vault-deep-research reads when relevant; batch pre-compilation of clippings is not cost-effective.
+- ~~vault-compile chunked compile protocol for large legal-text~~ — same reason above.

@@ -1,6 +1,6 @@
 ---
 name: vault-research
-description: This skill should be used when the user asks to "research a topic", "add to the vault", "look up [tax/accounting topic]", "what does the vault know about", "research [Thai tax term]", or any time a tax or accounting question should be researched and stored as knowledge. Also invoked internally by fb-research when vault coverage is insufficient. Researches a question, updates Orbit Vault, and returns compiled findings.
+description: This skill should be used when the user explicitly wants to add Thai tax or accounting knowledge to Orbit Vault — e.g. "add this to the vault", "research [Thai tax term] for the vault", "build a vault page on [topic]", "vault-research [topic]", "I want to save knowledge about [tax/accounting subject]". Requires both vault intent AND a Thai tax/accounting subject. Do NOT trigger for general research, marketing research, website work, or any question that does not specifically involve updating Orbit Vault with Thai tax or accounting knowledge. Also invoked internally by fb-research.
 version: 1.0.0
 ---
 
