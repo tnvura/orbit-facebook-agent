@@ -1,35 +1,46 @@
 # Sprint Status
 
-## Current Sprint: Phase 0 — Infrastructure Setup
+## Current Sprint: Phase 2 — Research Pipeline (`/fb-research`)
 
-**Started**: 2026-04-12  
-**Goal**: Get all infrastructure in place so development can begin on the scan/research/reply pipeline.
+**Started**: 2026-04-13
+**Goal**: Given a candidate post from `/fb-scan`, research the correct answer, validate existing replies, update Orbit Vault, and draft a Thai reply as Orbit Advisory.
 
 ---
 
-## Phase 0 Progress
+## Phase 1 Complete ✅ — Scan Pipeline
 
-- [x] Task 0.1 — Initialize Orbit Vault structure
-- [x] Task 0.2 — Install Obsidian CLI + obsidian-skills
-- [x] Task 0.3 — Git init + project docs
-- [x] Task 0.4 — Create plugin scaffold + GitHub repo
-- [x] Task 0.5 — Update root CLAUDE.md
+**Completed**: 2026-04-13
 
-## Phase 0 Checkpoint
-- [x] Orbit Vault opens in Obsidian (.obsidian/ generated)
-- [x] Vault CLI works: search, read, create all verified
-- [x] Plugin scaffold registered (orbit-facebook-agent on GitHub)
-- [x] obsidian-skills registered in Claude Code settings
-- [x] Git repo initialized and pushed (github.com/tnvura/orbit-facebook-agent)
-- [x] Root CLAUDE.md updated with 2 new subprojects
-- [x] Playwright session still works (Orbit Advisory profile active)
-- [x] No external API — classification runs inline within Claude Max subscription
+- [x] Task 1.1 — `scripts/extract_posts.py` — CDP-based extractor with incremental JS filter
+- [x] Task 1.2 — `/fb-scan` command + `skills/fb-scan/SKILL.md`
+
+### Phase 1 Checkpoint
+- [x] `/fb-scan` skill registered and invocable via Claude Code plugin
+- [x] Feed sorted to "New posts" before scrolling
+- [x] Profile detection works (warns only on confirmed wrong profile)
+- [x] `filter_mode=loose` — exclude_terms only; Claude classifies in Step 3
+- [x] Author exclusion: Boonruk Ngamkiatikul, "New posts" feed label
+- [x] Cross-group URL filter, text dedup, article share detection
+- [x] 50 scrolls covers ~1–2 days of group activity
+- [x] Live test: 32 raw results → 7 genuine candidates correctly identified
+- [x] Plugin pushed to GitHub (v0.1.2), auto-update confirmed working
+
+### Key Design Decisions (Phase 1)
+- **loose mode default**: JS filter only rejects known noise; Claude does real classification — better recall, fewer missed questions
+- **Incremental scroll + accumulation**: Facebook unloads DOM on scroll; must capture at each step
+- **CDP over playwright-cli**: System Chrome via CDP bypasses Facebook bot detection; playwright-cli subprocess has no shared state
+
+---
+
+## Phase 2 Tasks
+
+- [ ] Task 2.1 — `skills/vault-ingest/SKILL.md` — search and update Orbit Vault
+- [ ] Task 2.2 — `scripts/extract_replies.py` — extract existing comments from a post
+- [ ] Task 2.3 — `skills/fb-research/SKILL.md` + `commands/fb-research.md`
 
 ---
 
 ## Upcoming Phases
 
-- **Phase 1**: Scan pipeline (`/fb-scan` command)
-- **Phase 2**: Research pipeline (`/fb-research` skill)
 - **Phase 3**: Posting pipeline (`/fb-reply` command)
 - **Phase 4**: Agent definition + vault seeding + E2E test
