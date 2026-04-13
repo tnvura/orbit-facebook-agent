@@ -1,93 +1,99 @@
-# TODO — Vault Skills Implementation
+# TODO — Orbit Facebook Agent
 
-Task list corresponding to `tasks/plan.md`. Mark each task `[x]` as completed and commit at slice boundaries.
+Task list covering all phases. Corresponds to `tasks/plan.md` and SPRINT.md.
 
-## Slice 1 — Schema Foundation
-
-- [ ] 1a. Rewrite `Orbit Vault/CLAUDE.md` to match SPEC.md
-- [ ] 1b. Split `Orbit Vault/templates/knowledge-page.md` into `topic.md`, `entity.md`, `connection.md`, `post.md`
-- [ ] 1c. Create `Orbit Vault/sources/fb-posts/` + `Orbit Vault/sources/research/` (with `.gitkeep`)
-- [ ] 1d. Create `Orbit Vault/connections/` (with `.gitkeep`)
-- [ ] 1e. Rewrite `Orbit Vault/index.md` as 4-section pipe-table
-- [ ] 1f. Rewrite `Orbit Vault/log.md` in ISO timestamp format
-- [ ] ✅ Checkpoint 1: Obsidian opens clean, schema approved
-
-## Slice 2 — vault-capture
-
-- [ ] 2a. Create `skills/vault-capture/SKILL.md`
-- [ ] 2b. Document input contract
-- [ ] 2c. Behavioral test: fb-post write
-- [ ] 2d. Behavioral test: deep-research write
-- [ ] 2e. Behavioral test: refusal on `sources/raw/` write
-- [ ] 2f. Behavioral test: refusal on duplicate filename
-
-## Slice 3 — vault-search
-
-- [ ] 3a. Create `skills/vault-search/SKILL.md` (Grep → Obsidian CLI sequence)
-- [ ] 3b. Define structured return format
-- [ ] 3c. Behavioral test: no_match on empty vault
-- [ ] 3d. Behavioral test (deferred — after Slice 4 populates pages): strong_match surfaces known topic
-
-## Slice 4 — vault-compile (fb-research strategy)
-
-- [ ] 4a. Create `skills/vault-compile/SKILL.md` shell with source-kind router
-- [ ] 4b. Implement `fb-research` strategy
-- [ ] 4c. Implement backlink sweep + index + log update
-- [ ] 4d. Behavioral test: clean compile on user-provided synthetic pair
-- [ ] 4e. Behavioral test: contradiction triggers write-both-with-dates
-- [ ] ✅ Checkpoint 2: fb-research compile reviewed and approved
-
-## Slice 5 — vault-compile (article strategy)
-
-- [ ] 5a. Extend vault-compile with `article` strategy
-- [ ] 5b. Implement size-chunked read for >10k clippings
-- [ ] 5c. Implement stub-entity creation from frontmatter wikilinks
-- [ ] 5d. Behavioral test: short fake clipping compiled cleanly
-
-## Slice 6 — vault-compile (legal-text chunked)
-
-- [ ] 6a. Extend vault-compile with `legal-text` detection
-- [ ] 6b. Implement pre-pass skeleton TOC builder
-- [ ] 6c. Implement per-chunk loop with working-memory file
-- [ ] 6d. Implement post-pass coherence sweep + stub resolution + connections
-- [ ] 6e. Behavioral test: full compile of `sources/raw/มาตรา 38_64.md`
-- [ ] 6f. Verify all cross-references resolve (no broken wikilinks)
-- [ ] ✅ Checkpoint 3: chunked protocol approved on real clipping
-
-## Slice 7 — /vault-ingest command
-
-- [ ] 7a. Create `commands/vault-ingest.md`
-- [ ] 7b. Behavioral test: single-path invocation
-- [ ] 7c. Behavioral test: `--pending` mode
-
-## Slice 8 — vault-lint
-
-- [ ] 8a. Create `skills/vault-lint/SKILL.md` with all 7 checks
-- [ ] 8b. Implement severity-grouped report output
-- [ ] 8c. Behavioral test: inject one defect per check type, verify report
-
-## Slice 9 — E2E Integration
-
-- [ ] 9a. Set up: use Phase 1 candidate #1 (WhiteRabbit8044)
-- [ ] 9b. Drive manual flow: search → capture ×2 → compile → verify
-- [ ] 9c. Run vault-lint post-integration; expect clean report
-- [ ] ✅ Checkpoint 4: Phase 2 foundation complete
+Last updated: 2026-04-13
 
 ---
 
-## Notes
+## Phase 0 — Infrastructure ✅
 
-- Commit at each slice boundary with message format: `Slice N complete — {short description}`
-- If a behavioral test fails, do NOT advance to the next slice — iterate on the current skill first
-- Working-memory and lint-report files live in `logs/` (gitignored)
+- [x] 0.1 Initialize Orbit Vault structure (CLAUDE.md schema, templates, index.md, log.md, sources/)
+- [x] 0.2 Plugin scaffold — `.claude-plugin/plugin.json`, tracking directories, skills/ structure
+- [x] 0.3 CLAUDE.md written (business context, Playwright conventions, token optimization rules, vault integration, reply voice guide)
+- [x] 0.4 SPRINT.md and CHANGELOG.md created
+- [x] 0.5 Git repo initialized, pushed to GitHub (`tnvura/orbit-facebook-agent`)
+- [x] 0.6 Plugin registered and discoverable via Claude Code (`--plugin-dir`)
+- [x] 0.7 Browser session verified: Orbit Advisory page logged in via CDP, persistent profile
 
-## Known Bridge (Task 2.3)
+---
 
-The step from `tracking/scan-results-{date}.json` → `sources/fb-posts/` is NOT a separate skill.
-It is an input-preparation step inside `/fb-research`:
-1. Load candidate from scan-results JSON by number
-2. Run `extract_replies.py` on post URL → get replies
-3. Call `vault-capture(kind=fb-post, content=post+replies, slug=post-{post_id}, ...)`
+## Phase 1 — Scan Pipeline ✅
 
-This is documented in `skills/vault-capture/SKILL.md` § Caller Context.
-Wire it explicitly when building `/fb-research` skill (Task 2.3).
+- [x] 1.1 `scripts/extract_posts.js` — CDP-based incremental extractor with JS keyword filter
+- [x] 1.2 `scripts/extract_posts.py` — Python wrapper: launches extract_posts.js, dedup against processed-post-ids.txt, writes scan-results JSON
+- [x] 1.3 `skills/fb-scan/SKILL.md` — full scan workflow (extract → classify → save → present candidates)
+- [x] Live test: 32 raw posts → 7 genuine candidates (loose filter mode confirmed correct)
+
+### Phase 1 Checkpoint ✅
+- [x] `/fb-scan` skill invocable from Claude Code
+- [x] CDP connects to system Chrome (no bot detection issues)
+- [x] "New posts" feed sort active before scrolling
+- [x] Dedup against `tracking/processed-post-ids.txt` working
+- [x] Plugin auto-update from GitHub confirmed (version bump triggers cache refresh)
+
+---
+
+## Phase 2 — Research Pipeline ✅
+
+- [x] 2.1 `scripts/extract_replies.py` — CDP-based reply extractor (expands "View more comments", outputs JSON)
+- [x] 2.2 `skills/vault-deep-research/SKILL.md` — full research skill with:
+  - 3-axis parallel search (Tax / Accounting / Practitioner)
+  - 6-tier source authority + C1–C4 claim classification
+  - Confidence rubric (HIGH/MEDIUM/LOW)
+  - PDF cache dedup protocol
+  - 3 mandatory red-team challenges
+  - `references/output-template.md` and `references/term-glossary.md`
+- [x] 2.3 `skills/vault-capture/SKILL.md` — writes fb-posts and deep-research to sources/ (immutable)
+- [x] 2.4 `skills/vault-search/SKILL.md` — Grep-first vault search, returns strong/weak/none coverage signal
+- [x] 2.5 `skills/vault-compile/SKILL.md` — compiles sources into topics/, entities/, posts/; updates index.md and log.md
+- [x] 2.6 `skills/fb-research/SKILL.md` — full 8-step orchestration pipeline
+- [x] `reference/pdf-parser.md` — opendataloader-pdf usage guide (dedup, parse, targeted read)
+- [x] Live tests: candidate #3 (ค่าเบี้ยเลี้ยง vs สวัสดิการ) — HIGH confidence; candidate #2 (บอจ.5 installment) — MEDIUM confidence
+- [x] Vault: 3 topics, 5 entities, 2 research sources, 2 post records compiled
+
+### Phase 2 Checkpoint ✅
+- [x] `/fb-research {n}` invocable from Claude Code
+- [x] Vault-first logic works (search before deep-research)
+- [x] Draft saved to `tracking/drafts/{post_id}.md` after each run
+- [x] Community replies validated in each run
+- [x] index.md and log.md updated on every compile
+
+---
+
+## Phase 3 — Posting Pipeline ❌ (next)
+
+- [ ] 3.1 `scripts/post_reply.py` — fills comment box via CDP; does NOT auto-submit; returns submit button ref
+- [ ] 3.2 `skills/fb-reply/SKILL.md` — list drafts → show draft → confirm → fill comment → user confirms → submit → archive
+- [ ] Live test: post `tracking/drafts/27136581685947816.md` as Orbit Advisory
+
+### Phase 3 Checkpoint
+- [ ] Reply appears on Facebook as Orbit Advisory page
+- [ ] Post ID appended to `tracking/processed-post-ids.txt`
+- [ ] Draft moved to `tracking/posted/{post_id}.md`
+- [ ] Two confirmation gates work (draft review + post confirmation)
+
+---
+
+## Phase 4 — Polish & Seed ❌
+
+- [ ] 4.1 `agents/fb-engagement-agent.md` — orchestration agent with `<example>` blocks for full scan→research→reply loop
+- [ ] 4.2 Seed vault: 5–10 foundation pages on high-frequency topics (ภ.พ.36, WHT rates/forms, VAT threshold, ใบกำกับภาษี requirements, นิติบุคคล registration)
+- [ ] 4.3 Update SPRINT.md + CHANGELOG.md to reflect Phase 3/4 completion
+- [ ] 4.4 Push final version to GitHub
+
+### Phase 4 Checkpoint (E2E)
+- [ ] Full loop: `/fb-scan` → `/fb-research {n}` → `/fb-reply` works end-to-end
+- [ ] Reply visible on Facebook as Orbit Advisory
+- [ ] Answered post does not reappear in next `/fb-scan`
+- [ ] Vault updated with research from the answered post
+
+---
+
+## Backlog (deferred, not blocking)
+
+- [ ] `skills/vault-lint/SKILL.md` — 7-check quality audit (orphan sources, broken wikilinks, missing citations, etc.)
+- [ ] `skills/vault-ingest/SKILL.md` — slash command for ingesting user-dropped raw clippings (`--pending` mode)
+- [ ] Cache TAS 1 Manual PDF (needed for cost-centre classification questions)
+- [ ] vault-compile: chunked strategy for large legal-text sources (มาตรา 38_64.md is 100+ pages)
+- [ ] Formal behavioral tests for vault-capture, vault-search, vault-compile edge cases
