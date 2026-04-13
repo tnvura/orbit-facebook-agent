@@ -1,0 +1,20 @@
+#!/bin/bash
+# Auto-increment plugin.json patch version on every commit.
+# Install: bash scripts/hooks/install.sh
+
+PLUGIN_JSON=".claude-plugin/plugin.json"
+
+if [ ! -f "$PLUGIN_JSON" ]; then
+  exit 0
+fi
+
+CURRENT=$(grep '"version"' "$PLUGIN_JSON" | sed 's/.*"version": "\(.*\)".*/\1/')
+MAJOR=$(echo "$CURRENT" | cut -d. -f1)
+MINOR=$(echo "$CURRENT" | cut -d. -f2)
+PATCH=$(echo "$CURRENT" | cut -d. -f3)
+NEW_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+
+sed -i '' "s/\"version\": \"$CURRENT\"/\"version\": \"$NEW_VERSION\"/" "$PLUGIN_JSON"
+git add "$PLUGIN_JSON"
+
+echo "plugin.json: $CURRENT → $NEW_VERSION"
