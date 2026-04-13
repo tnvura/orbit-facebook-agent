@@ -194,8 +194,23 @@ Stop fetching if approaching cap; synthesize from available sources and flag "in
 | **C2** Official interpretation | Tier 3 (RD ruling, TFAC FAQ) | `**Claim** (C2): …` / `**Confidence:** MEDIUM` |
 | **C3** Practitioner consensus | Tier 3–4, practitioner agreement | `**Claim** (C3): …` / `**Confidence:** LOW-MEDIUM` |
 | **C4** Unresolved | Contested, no consensus | `**Claim** (C4, unresolved): … / …` |
+| **C4-unsourced** | Likely correct but no Tier 1–3 source was read this session | `**Claim** (C4-unsourced): …` — must NOT be compiled to vault as fact |
 
-**Vault rule:** `topics/` and `entities/` pages accept C1 and C2 only. C3 may supplement. C4 must be flagged — vault-compile records it as a dated contested claim.
+**Vault rule:** `topics/` and `entities/` pages accept C1 and C2 only. C3 may supplement. C4 and C4-unsourced must be flagged — vault-compile records them as dated unverified claims pending sourcing.
+
+### Sources That Do NOT Count
+
+The following are **not valid sources** for any claim classification, regardless of how authoritative they feel:
+
+| Not a source | Why |
+|---|---|
+| Training knowledge / general knowledge | Not traceable to a source read this session |
+| `.claude/rules/` files (thai-tax-and-accounting.md, etc.) | Internal reference summaries, not primary sources |
+| `CLAUDE.md` files | Project documentation, not law text |
+| Other compiled vault pages (`topics/`, `entities/`) | Circular — these were compiled from sources, not the source itself |
+| Rules-of-thumb ("well-known rates") | Practitioner lore without a citation is C4-unsourced |
+
+**The test:** Can you point to a specific URL or file path that was actually fetched or read in Steps 3–4 of this session? If no → the claim is C4-unsourced, not C1/C2/C3.
 
 ---
 
@@ -246,6 +261,7 @@ The slug must match the stub being filled (e.g., `employee-welfare-vs-allowance`
 - Always translate terms before searching (colloquial-only misses TAS/TFRS)
 - Always save to `Orbit Vault/sources/research/` with correct frontmatter
 - Preserve verbatim quotes from Tier 1–2 — do not paraphrase law text
+- **Never classify a claim as C1/C2/C3 based on training knowledge, `.claude/rules/` files, CLAUDE.md, or other compiled vault pages** — these are always C4-unsourced regardless of how authoritative they feel. The only valid sources are URLs or file paths actually fetched or read in Steps 3–4 of this session.
 
 ---
 
