@@ -1,6 +1,12 @@
-# Skill: fb-scan
+---
+name: fb-scan
+description: This skill should be used when the user asks to "scan Facebook groups", "find new tax questions", "check for new posts", "run fb-scan", or "look for questions to answer on Facebook". Drives the full scan-and-classify pipeline for the Thai Facebook accounting group.
+version: 1.0.0
+---
 
-Scan the target Facebook group for new tax/accounting questions worth answering as Orbit Advisory. Extracts posts via browser automation, filters with Thai keywords (zero LLM tokens), deduplicates, then classifies the remaining candidates inline.
+# fb-scan
+
+Scan the target Facebook group for new tax/accounting questions worth answering as Orbit Advisory. Extract posts via browser automation, filter with Thai keywords (zero LLM tokens), deduplicate, then classify the remaining candidates inline.
 
 ---
 
@@ -174,3 +180,11 @@ If 0 candidates: "No new matching posts found. Group feed may not have tax quest
   ```bash
   rm -f .browser-profile/SingletonLock .browser-profile/SingletonCookie .browser-profile/SingletonSocket
   ```
+
+---
+
+## References
+
+- `scripts/extract_posts.py` — Playwright extraction script; scrolls group feed, runs JS keyword filter, outputs JSON
+- `reference/thai-keywords.json` — Thai keyword lists (`question_markers`, `accounting_tax_terms`, `exclude_terms`) used by the JS filter
+- `reference/playwright-facebook-controls.md` — Validated Playwright controls for Facebook navigation, scrolling, and content extraction

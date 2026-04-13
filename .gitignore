@@ -21,3 +21,6 @@ tracking/posted/
 __pycache__/
 *.pyc
 *.pyo
+
+# PDF parser venv (opendataloader-pdf)
+.venv-pdf/
