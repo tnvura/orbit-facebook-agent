@@ -149,7 +149,7 @@ Budget: ~5k tokens per fetch. Always prefer a cached `sources/raw/` clipping ove
 
 **Never WebFetch a PDF directly — it consumes 30k+ tokens for a 20-page doc.**
 
-Full pipeline details: **`reference/pdf-parser.md`** (project-level reference)
+Full pipeline details: **`references/pdf-parser.md`** (project-level reference)
 
 ```bash
 CACHE_DIR="/Users/tnvura/Desktop/Orbit Advisory/Orbit Vault/sources/raw/pdf-cache"
@@ -286,4 +286,4 @@ If `Confidence: LOW` or gaps are non-trivial, the caller (`/fb-research`) must w
 
 - **`references/output-template.md`** — Full output file structure, frontmatter schema, worked example pointer
 - **`references/term-glossary.md`** — Canonical colloquial↔formal term table, register rules, quick lookup by question type
-- **`reference/pdf-parser.md`** (project-level) — PDF parser installation, pipeline, dedup protocol, quirks
+- **`references/pdf-parser.md`** (project-level) — PDF parser installation, pipeline, dedup protocol, quirks
