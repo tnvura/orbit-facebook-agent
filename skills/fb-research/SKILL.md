@@ -107,21 +107,17 @@ Receive the result object:
 - `c4_gaps`
 - `vault_pages` (list of compiled pages to read for drafting the reply)
 
+**Output rule:** Sub-skill return blocks (VAULT-RESEARCH RESULT, COMPILE RESULT, DEEP-RESEARCH RESULT, etc.) are internal — do NOT echo them to the user. All user-visible output is in Step 7 only.
+
 Read the compiled vault pages listed in `vault_pages` before proceeding to Step 5.
 
 ---
 
 ## Step 5 — Validate Existing Replies
 
-Using the replies from Step 2 and the vault_pages from Step 4, assess each community reply:
+**Internal step — no output.** Using the replies from Step 2 and the vault_pages from Step 4, assess each community reply silently. Store results for Step 7.
 
-| Commenter | Reply (gist) | Assessment |
-|-----------|-------------|------------|
-| {author}  | {first 80 chars} | ✅ Correct / ⚠️ Partial / ❌ Wrong |
-
-Note specifically what is wrong and which law/standard contradicts it.
-
-If no replies exist, skip this table.
+Only surface ⚠️ Partial or ❌ Wrong replies in the Step 7 summary — skip ✅ Correct replies entirely. If all replies are correct or no replies exist, note that in Step 7.
 
 ---
 
@@ -171,7 +167,7 @@ ls "/Users/tnvura/Desktop/Orbit Advisory/Orbit Vault/posts/" | grep "{post_id}"
 - Updated: [list]
 
 ### Reply Validation
-[table from Step 5, or "No existing replies"]
+[⚠️/❌ replies only — omit if all correct or no replies]
 
 ### Draft Thai Reply
 [draft text]
