@@ -192,6 +192,7 @@ To discard: delete tracking/drafts/{post_id}.md
 - Practical — give actionable steps, not "consult an accountant"
 - Not a hard sell — Orbit Advisory's name appears from the page; no explicit promotion
 - **No emoji or icons** — reply must read as human-written, not bot-generated
+- **Plain text only — no Markdown** — Facebook renders no formatting; `**bold**`, `*italic*`, `##`, `-` bullets all appear as literal characters. Write prose and numbered lists using natural Thai sentence flow instead.
 - **Never reference other commenters** — do not acknowledge, agree with, or build on other replies (e.g. no "ตามที่คุณ X ตอบไว้", "คุณ X ชี้ประเด็นได้ถูกต้อง", "เพิ่มเติมจากที่มีคนตอบไปแล้ว"). The reply must stand alone as if Orbit Advisory is answering the question directly and independently.
 
 ---
