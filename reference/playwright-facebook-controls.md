@@ -243,6 +243,8 @@ playwright-cli type "text to type"
 | Author names | `h2, h3` inside article | Post author heading |
 | See more button | `button` with text "See more" | Expand truncated posts |
 | Comment button | `button` with text "Comment" | Opens comment section |
+| Profile indicator (feed) | aria-label "Comment as X" | Active profile on feed view |
+| Profile indicator (post page) | aria-label "Answer as X" | Active profile on post page — Facebook uses "Answer as" not "Comment as" here |
 | Feed container | `feed` role | The main feed element |
 | Write post | `button` with text "Write something..." | Create new post |
 | Search in group | `button` with text "Search within this group" | Group-specific search |

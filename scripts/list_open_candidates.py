@@ -97,15 +97,17 @@ def load_all_candidates(scan_files):
     return candidates_by_id, most_recent_date
 
 
-def filter_open(candidates_by_id, drafts_dir, skipped_dir):
+def filter_open(candidates_by_id, drafts_dir, skipped_dir, posted_dir):
     """
-    Return candidates that have neither a draft nor a skip record.
+    Return candidates that have no draft, no posted record, and no skip record.
     Uses os.path.exists per candidate — O(1) per check regardless of
-    total files in either directory.
+    total files in any directory.
     """
     open_candidates = []
     for post_id, candidate in candidates_by_id.items():
         if os.path.exists(os.path.join(drafts_dir, f"{post_id}.md")):
+            continue
+        if os.path.exists(os.path.join(posted_dir, f"{post_id}.md")):
             continue
         if os.path.exists(os.path.join(skipped_dir, f"{post_id}.md")):
             continue
@@ -158,22 +160,23 @@ def build_open_list(tracking_dir):
 
     drafts_dir = os.path.join(tracking_dir, "drafts")
     skipped_dir = os.path.join(tracking_dir, "skipped")
+    posted_dir = os.path.join(tracking_dir, "posted")
 
-    # Treat missing directories as empty — no drafts/skips yet
-    if not os.path.isdir(drafts_dir) and not os.path.isdir(skipped_dir):
+    # Treat missing directories as empty — no drafts/skips/posted yet
+    if not any(os.path.isdir(d) for d in [drafts_dir, skipped_dir, posted_dir]):
         open_candidates = list(candidates_by_id.values())
     else:
-        open_candidates = filter_open(candidates_by_id, drafts_dir, skipped_dir)
+        open_candidates = filter_open(candidates_by_id, drafts_dir, skipped_dir, posted_dir)
 
     open_candidates = renumber(open_candidates)
     return open_candidates, total_candidates, most_recent_date
 
 
 def print_summary(open_candidates, total_candidates, most_recent_date):
-    drafted_or_skipped = total_candidates - len(open_candidates)
+    handled = total_candidates - len(open_candidates)
     print(
         f"Total unique candidates: {total_candidates} | "
-        f"Drafted/Skipped: {drafted_or_skipped} | "
+        f"Handled (drafted/posted/skipped): {handled} | "
         f"Open: {len(open_candidates)}",
         file=sys.stderr,
     )

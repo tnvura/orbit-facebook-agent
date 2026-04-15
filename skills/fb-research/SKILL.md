@@ -176,10 +176,12 @@ To discard: delete tracking/drafts/{post_id}.md
 ## Reply Voice Rules
 
 - Thai language always
+- Use **ครับ** throughout — reply as a male speaker
 - Professional but approachable — friendly expert, not corporate
 - Specific — cite the actual law, form name, or rate (e.g. "ตาม ม.80/1 แห่งประมวลรัษฎากร")
 - Practical — give actionable steps, not "consult an accountant"
 - Not a hard sell — Orbit Advisory's name appears from the page; no explicit promotion
+- **No emoji or icons** — reply must read as human-written, not bot-generated
 
 ---
 
