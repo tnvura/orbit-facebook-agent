@@ -16,9 +16,8 @@ Hard-stop confirmation required — nothing is posted without explicit user appr
 1. Load and display the draft
 2. Hard-stop confirmation
 3. Post via browser automation (profile safety check included)
-4. Archive draft to `tracking/posted/`
+4. Update draft frontmatter and move to `tracking/posted/`
 5. Update Orbit Vault post page outcome to `posted`
-6. Remove draft file
 
 ---
 
@@ -86,19 +85,15 @@ python3 scripts/post_reply.py \
 
 ## Step 4 — Archive Draft to `tracking/posted/`
 
-Read `tracking/drafts/{post_id}.md`. Write to `tracking/posted/{post_id}.md` adding a `posted` date field to the frontmatter:
+Edit `tracking/drafts/{post_id}.md` in place — update the frontmatter fields:
+- `status`: `pending-approval` → `posted`
+- Add `posted: {today YYYY-MM-DD}`
 
-```markdown
----
-post_id: "{post_id}"
-post_url: "{post_url}"
-author: "{author}"
-drafted: {drafted_date}
-posted: {today YYYY-MM-DD}
-status: posted
----
+Then move the file:
 
-{reply body text}
+```bash
+mv "/Users/tnvura/Desktop/Orbit Advisory/Orbit Facebook Agent/tracking/drafts/{post_id}.md" \
+   "/Users/tnvura/Desktop/Orbit Advisory/Orbit Facebook Agent/tracking/posted/{post_id}.md"
 ```
 
 ---
@@ -117,13 +112,7 @@ If not found → warn "Vault post page not found for {post_id} — skipping vaul
 
 ---
 
-## Step 6 — Remove Draft File
-
-Delete `tracking/drafts/{post_id}.md`.
-
----
-
-## Step 7 — Confirm to User
+## Step 6 — Confirm to User
 
 ```
 Posted successfully.
