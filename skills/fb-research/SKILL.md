@@ -24,15 +24,33 @@ Research a candidate Facebook post and draft a Thai reply for human review. Dele
 
 ## Step 1 — Load Candidate
 
-Parse `$ARGUMENTS` (the candidate number passed by the user):
+Run the open candidates script:
 
-- If a number (e.g. `3`) → load `tracking/scan-results-{today}.json`, pick entry at index `[number - 1]`
-- If no argument → read `tracking/scan-results-{today}.json` and list all candidates by number, then stop and ask which to research
-- If no scan-results file for today → check yesterday's date, then report: "No scan results found. Run `/fb-scan` first."
+```bash
+cd "/Users/tnvura/Desktop/Orbit Advisory/Orbit Facebook Agent"
+python3 scripts/list_open_candidates.py
+```
 
-Extract: `post_id`, `post_url`, `author`, `text` (first 500 chars), `topic_tag`.
+**If no argument provided** → display the open list and wait for user input:
 
-If `post_id` already exists in `tracking/processed-post-ids.txt` → warn: "Post {post_id} was already processed. Research again? [y/N]" — stop unless confirmed.
+```
+Open candidates ({n} total):
+
+{number}. [{topic}] {author} — {text snippet} (scan: {scan_date})
+...
+
+Pick a number to research, or say "skip N" to dismiss a candidate.
+```
+
+- If user says "research N" or just types a number → proceed with that candidate
+- If user says "skip N" (or "skip 2, 5") → invoke **fb-skip** with those numbers → re-run script → re-display updated list → wait again
+- If list is empty → "No open candidates. Run `/fb-scan` for fresh posts." — stop
+
+**If a number is provided as argument** → pick the matching entry from the script output by `number` field. If not found → "No open candidate with that number. Run `/fb-research` without arguments to see the current list." — stop.
+
+**If script exits with code 2** → "No scan-results files found. Run `/fb-scan` first." — stop.
+
+Extract from the selected candidate: `post_id`, `post_url`, `author`, `text`, `topic`.
 
 ---
 
