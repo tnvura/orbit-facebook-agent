@@ -143,6 +143,16 @@ status: pending-approval
 {draft reply text}
 ```
 
+### Step 6b — Verify posts/ file exists
+
+Check that vault-compile created the post record:
+
+```bash
+ls "/Users/tnvura/Desktop/Orbit Advisory/Orbit Vault/posts/" | grep "{post_id}"
+```
+
+**If missing** — create it now using the `templates/post.md` template. Do not proceed to Step 7 until this file exists. A missing posts/ file means the vault has no permanent Q&A record for this research, which breaks the knowledge compounding loop.
+
 ---
 
 ## Step 7 — Present Results
@@ -182,6 +192,7 @@ To discard: delete tracking/drafts/{post_id}.md
 - Practical — give actionable steps, not "consult an accountant"
 - Not a hard sell — Orbit Advisory's name appears from the page; no explicit promotion
 - **No emoji or icons** — reply must read as human-written, not bot-generated
+- **Never reference other commenters** — do not acknowledge, agree with, or build on other replies (e.g. no "ตามที่คุณ X ตอบไว้", "คุณ X ชี้ประเด็นได้ถูกต้อง", "เพิ่มเติมจากที่มีคนตอบไปแล้ว"). The reply must stand alone as if Orbit Advisory is answering the question directly and independently.
 
 ---
 
